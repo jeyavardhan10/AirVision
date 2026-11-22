@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #070d19;
+    color: #f1f5f9;
+  }
+
+  body {
+    overflow-x: hidden;
+    letter-spacing: 0.005em;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom atmospheric surface & spotlight tokens driven by live weather scene */
+:root {
+  --sky-accent: #38bdf8;
+  --sky-accent-soft: rgba(56, 189, 248, 0.16);
+  --sky-glow: rgba(255, 224, 150, 0.28);
+  --surface-glass: rgba(8, 15, 29, 0.56);
+  --surface-glass-strong: rgba(7, 13, 25, 0.78);
+  --surface-border: rgba(255, 255, 255, 0.16);
+  --surface-border-hover: rgba(255, 255, 255, 0.32);
+}
+
+[data-scene="sunny"] {
+  --sky-accent: #fbbf24;
+  --sky-accent-soft: rgba(251, 191, 36, 0.18);
+  --sky-glow: rgba(253, 224, 71, 0.34);
+  --surface-glass: rgba(10, 22, 44, 0.6);
+  --surface-glass-strong: rgba(8, 18, 36, 0.8);
+}
+
+[data-scene="partly-cloudy"] {
+  --sky-accent: #38bdf8;
+  --sky-accent-soft: rgba(56, 189, 248, 0.18);
+  --sky-glow: rgba(186, 230, 253, 0.3);
+  --surface-glass: rgba(10, 20, 38, 0.58);
+  --surface-glass-strong: rgba(8, 17, 32, 0.78);
+}
+
+[data-scene="overcast"] {
+  --sky-accent: #94a3b8;
+  --sky-accent-soft: rgba(148, 163, 184, 0.2);
+  --sky-glow: rgba(203, 213, 225, 0.26);
+  --surface-glass: rgba(12, 19, 32, 0.62);
+  --surface-glass-strong: rgba(10, 16, 26, 0.82);
+}
+
+[data-scene="rain"] {
+  --sky-accent: #38bdf8;
+  --sky-accent-soft: rgba(56, 189, 248, 0.2);
+  --sky-glow: rgba(125, 211, 252, 0.32);
+  --surface-glass: rgba(7, 15, 28, 0.58);
+  --surface-glass-strong: rgba(6, 12, 24, 0.8);
+}
+
+[data-scene="storm"] {
+  --sky-accent: #a78bfa;
+  --sky-accent-soft: rgba(167, 139, 250, 0.2);
+  --sky-glow: rgba(196, 181, 253, 0.34);
+  --surface-glass: rgba(8, 11, 26, 0.62);
+  --surface-glass-strong: rgba(6, 9, 20, 0.84);
+}
+
+[data-scene="fog"] {
+  --sky-accent: #5eead4;
+  --sky-accent-soft: rgba(94, 234, 212, 0.18);
+  --sky-glow: rgba(153, 246, 228, 0.28);
+  --surface-glass: rgba(10, 22, 31, 0.64);
+  --surface-glass-strong: rgba(8, 19, 27, 0.84);
+}
+
+[data-scene="night"] {
+  --sky-accent: #60a5fa;
+  --sky-accent-soft: rgba(96, 165, 250, 0.18);
+  --sky-glow: rgba(147, 197, 253, 0.3);
+  --surface-glass: rgba(6, 12, 26, 0.56);
+  --surface-glass-strong: rgba(5, 9, 20, 0.8);
+}
+
+.atmosphere-surface {
+  background: linear-gradient(165deg, var(--surface-glass), rgba(6, 12, 24, 0.72));
+  border: 1px solid var(--surface-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13), 0 14px 34px -18px rgba(2, 6, 18, 0.62);
+  transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 420ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.atmosphere-surface-strong {
+  background: linear-gradient(165deg, var(--surface-glass-strong), rgba(5, 10, 20, 0.88));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 18px 42px -16px rgba(2, 6, 18, 0.78);
+}
+
+/* Pointer-tracking spotlight border & subtle glare */
+.card-interactive {
+  position: relative;
+}
+
+.card-interactive:hover {
+  border-color: var(--surface-border-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 42px -18px rgba(2, 6, 18, 0.78),
+    0 0 28px -12px var(--sky-glow);
+}
+
+.card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    var(--sky-glow),
+    rgba(255, 255, 255, 0.05) 38%,
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.card-interactive:hover .card-glare {
+  opacity: 0.72;
+}
+
+/* Scroll reveal compositor-only transitions */
+.reveal-item {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-item.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Range slider styling for estimator */
+input[type="range"].air-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.14);
+  height: 6px;
+  border-radius: 9999px;
+}
+
+input[type="range"].air-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 2px solid var(--sky-accent);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 140ms ease;
+}
+
+input[type="range"].air-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Respect reduced motion strictly */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .card-interactive {
+    transform: none !important;
+    transition: border-color 150ms ease !important;
+  }
+}

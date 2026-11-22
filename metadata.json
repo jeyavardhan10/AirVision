@@ -1,0 +1,6 @@
+{
+  "name": "AirVision",
+  "description": "Cinematic live-weather and Bengaluru US EPA AQI intelligence platform with real-time reactive sky visuals, 24-hour XGBoost forecasting, SHAP explainability, and atmospheric pattern analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
